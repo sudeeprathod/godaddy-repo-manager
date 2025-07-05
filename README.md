@@ -49,6 +49,7 @@ npm start
 - `npm start` - Runs the app in development mode
 - `npm run build` - Builds the app for production
 - `npm test` - Launches the test runner
+- `npm test -- --coverage --watchAll=false` - Launches the test runner with test coverage
 - `npm run lint` - Runs ESLint to check code quality
 - `npm run lint:fix` - Fixes ESLint errors automatically
 - `npm run format` - Formats code with Prettier
