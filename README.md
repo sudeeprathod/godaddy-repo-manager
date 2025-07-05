@@ -211,24 +211,59 @@ _Focus was on delivering a robust MVP with core functionality, code quality, and
 ## 📁 Project Structure
 
 ```
-src/
-├── components/
-│   ├── generic/           # Reusable UI components
-│   │   ├── Button.tsx     # Generic button component
-│   │   ├── Input.tsx      # Generic input component
-│   │   ├── Card.tsx       # Generic card component
-│   │   └── __tests__/     # Tests for generic components
-│   └── github/            # GitHub-specific components
-│       ├── GitHubRepositoryList.tsx
-│       ├── RepositoryDetails.tsx
-│       └── __tests__/     # Tests for GitHub components
-├── services/
-│   └── githubService.ts   # GitHub API service
-├── types/
-│   └── github.ts          # TypeScript types for GitHub API
-├── App.tsx               # Main application component
-├── App.css              # Main application styles
-└── index.tsx            # Application entry point
+godaddy-repo-manager/
+├── public/                 # Static assets
+│   ├── index.html         # HTML template
+│   ├── favicon.ico        # App icon
+│   └── manifest.json      # PWA manifest
+├── src/
+│   ├── components/        # React components
+│   │   ├── generic/       # Reusable UI components
+│   │   │   ├── Button.tsx     # Generic button component
+│   │   │   ├── Button.css     # Button styles
+│   │   │   ├── Input.tsx      # Generic input component
+│   │   │   ├── Input.css      # Input styles
+│   │   │   ├── Card.tsx       # Generic card component
+│   │   │   ├── Card.css       # Card styles
+│   │   │   ├── ErrorBoundary.tsx  # Error boundary component
+│   │   │   ├── ErrorBoundary.css  # Error boundary styles
+│   │   │   └── __tests__/     # Tests for generic components
+│   │   ├── github/        # GitHub-specific components
+│   │   │   ├── GitHubRepositoryList.tsx
+│   │   │   ├── GitHubRepositoryList.css
+│   │   │   ├── AdvancedFilters.tsx
+│   │   │   ├── AdvancedFilters.css
+│   │   │   └── __tests__/     # Tests for GitHub components
+│   │   └── repositoryDetail/  # Repository detail components
+│   │       ├── RepositoryDetails.tsx
+│   │       ├── RepositoryDetails.css
+│   │       └── __tests__/     # Tests for detail components
+│   ├── services/          # API and business logic services
+│   │   ├── githubApi.ts       # GitHub API service
+│   │   ├── bookmarkService.ts # Bookmark management service
+│   │   └── __tests__/         # Service tests
+│   ├── utils/             # Utility functions
+│   │   ├── utils.ts           # General utility functions
+│   │   ├── exportUtils.ts     # Export functionality (CSV/JSON)
+│   │   └── __tests__/         # Utility tests
+│   ├── types/             # TypeScript type definitions
+│   │   ├── github.ts          # GitHub API types
+│   │   └── __tests__/         # Type tests
+│   ├── __tests__/         # Root level tests
+│   │   └── reportWebVitals.test.ts
+│   ├── App.tsx            # Main application component
+│   ├── App.css            # Main application styles
+│   ├── App.test.tsx       # App component tests
+│   ├── index.tsx          # Application entry point
+│   ├── index.css          # Global styles
+│   ├── setupTests.ts      # Test setup configuration
+│   ├── reportWebVitals.ts # Performance monitoring
+│   ├── logo.svg           # App logo
+│   └── react-app-env.d.ts # React app type definitions
+├── package.json           # Dependencies and scripts
+├── tsconfig.json          # TypeScript configuration
+├── .gitignore            # Git ignore rules
+└── README.md             # Project documentation
 ```
 
 ## 🧩 Component Architecture
