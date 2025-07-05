@@ -26,7 +26,7 @@ A modern React application that fetches and displays GoDaddy's GitHub repositori
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:sudeeprathod/godaddy-repo-manager.git
 cd godaddy-repo-manager
 ```
 
