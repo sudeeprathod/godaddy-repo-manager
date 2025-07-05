@@ -91,7 +91,7 @@ describe('GitHubApiService', () => {
       });
 
       await expect(GitHubApiService.getGodaddyRepositories()).rejects.toThrow(
-        'GitHub API error: 403 Forbidden'
+        new Error('GitHub API error: 403 Forbidden')
       );
     });
 
@@ -99,7 +99,7 @@ describe('GitHubApiService', () => {
       (fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
       await expect(GitHubApiService.getGodaddyRepositories()).rejects.toThrow(
-        'Network error'
+        new Error('Network error')
       );
     });
 
@@ -234,7 +234,7 @@ describe('GitHubApiService', () => {
 
       await expect(
         GitHubApiService.getRepositoryDetails('test-repo')
-      ).rejects.toThrow('GitHub API error: 404 Not Found');
+      ).rejects.toThrow(new Error('GitHub API error: 404 Not Found'));
     });
 
     it('handles network error for repository details', async () => {
@@ -242,7 +242,7 @@ describe('GitHubApiService', () => {
 
       await expect(
         GitHubApiService.getRepositoryDetails('test-repo')
-      ).rejects.toThrow('Network error');
+      ).rejects.toThrow(new Error('Network error'));
     });
   });
 });

@@ -5,9 +5,13 @@ export interface InputProps {
   type?: 'text' | 'email' | 'password' | 'number' | 'search' | 'url';
   placeholder?: string;
   value?: string;
+  defaultValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   name?: string;
   id?: string;
   disabled?: boolean;
@@ -20,14 +24,20 @@ export interface InputProps {
   pattern?: string;
   size?: 'small' | 'medium' | 'large';
   variant?: 'default' | 'outlined' | 'filled';
-  error?: string;
+  error?: boolean | string;
+  errorMessage?: string;
   success?: boolean;
   label?: string;
   helperText?: string;
   icon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   className?: string;
   dataTestId?: string;
+  loading?: boolean;
+  fullWidth?: boolean;
+  spellCheck?: boolean;
+  tabIndex?: number;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -36,9 +46,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       type = 'text',
       placeholder,
       value,
+      defaultValue,
       onChange,
       onBlur,
       onFocus,
+      onKeyDown,
+      onKeyUp,
+      onKeyPress,
       name,
       id,
       disabled = false,
@@ -52,13 +66,19 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       size = 'medium',
       variant = 'default',
       error,
+      errorMessage,
       success = false,
       label,
       helperText,
       icon,
+      rightIcon,
       iconPosition = 'left',
       className = '',
       dataTestId,
+      loading = false,
+      fullWidth = false,
+      spellCheck,
+      tabIndex,
     },
     ref
   ) => {
@@ -68,12 +88,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const errorClass = error ? 'input--error' : '';
     const successClass = success && !error ? 'input--success' : '';
     const disabledClass = disabled ? 'input--disabled' : '';
+    const loadingClass = loading ? 'input--loading' : '';
+    const fullWidthClass = fullWidth ? 'input--full-width' : '';
     const hasIconClass = icon
       ? `input--has-icon input--icon-${iconPosition}`
       : '';
+    const hasRightIconClass = rightIcon ? 'input--has-right-icon' : '';
 
     const combinedClassName =
-      `${baseClass} ${sizeClass} ${variantClass} ${errorClass} ${successClass} ${disabledClass} ${hasIconClass} ${className}`.trim();
+      `${baseClass} ${sizeClass} ${variantClass} ${errorClass} ${successClass} ${disabledClass} ${loadingClass} ${fullWidthClass} ${hasIconClass} ${hasRightIconClass} ${className}`.trim();
 
     return (
       <div className="input-wrapper">
@@ -92,9 +115,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type={type}
             placeholder={placeholder}
             value={value}
+            defaultValue={defaultValue}
             onChange={onChange}
             onBlur={onBlur}
             onFocus={onFocus}
+            onKeyDown={onKeyDown}
+            onKeyUp={onKeyUp}
+            onKeyPress={onKeyPress}
             name={name}
             id={id}
             disabled={disabled}
@@ -107,18 +134,27 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             pattern={pattern}
             className={combinedClassName}
             data-testid={dataTestId}
+            spellCheck={spellCheck}
+            tabIndex={tabIndex}
           />
           {icon && iconPosition === 'right' && (
             <span className="input-icon input-icon--right">{icon}</span>
           )}
+          {rightIcon && (
+            <span className="input-icon input-icon--right">{rightIcon}</span>
+          )}
         </div>
-        {(error || helperText) && (
+        {(!!errorMessage || !!error || !!helperText) && (
           <div
             className={`input-message ${
-              error ? 'input-message--error' : 'input-message--helper'
+              error || errorMessage
+                ? 'input-message--error'
+                : 'input-message--helper'
             }`}
           >
-            {error || helperText}
+            {errorMessage ||
+              (typeof error === 'string' ? error : undefined) ||
+              helperText}
           </div>
         )}
       </div>

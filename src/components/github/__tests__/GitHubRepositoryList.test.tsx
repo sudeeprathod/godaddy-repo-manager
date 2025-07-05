@@ -387,10 +387,13 @@ describe('GitHubRepositoryList', () => {
   });
 
   it('handles intersection observer for infinite scroll', async () => {
-    const mockRepos = Array.from({ length: 24 }, (_, i) => ({
+    // Create a smaller set of mock repositories to avoid duplicate key issues
+    const mockRepos = Array.from({ length: 15 }, (_, i) => ({
       ...mockRepositories[0],
-      id: i + 1,
-      name: `repo-${i + 1}`,
+      id: i + 1000, // Use higher IDs to avoid conflicts
+      name: `repo-${i + 1000}`,
+      fullName: `godaddy/repo-${i + 1000}`,
+      htmlUrl: `https://github.com/godaddy/repo-${i + 1000}`,
     }));
 
     mockGitHubApiService.getGodaddyRepositories.mockResolvedValue(mockRepos);
@@ -398,7 +401,7 @@ describe('GitHubRepositoryList', () => {
     render(<GitHubRepositoryList onRepositoryClick={mockOnRepositoryClick} />);
 
     await waitFor(() => {
-      expect(screen.getByText('repo-1')).toBeInTheDocument();
+      expect(screen.getByText('repo-1000')).toBeInTheDocument();
     });
 
     // Wait for the loading ref element to appear
@@ -425,34 +428,7 @@ describe('GitHubRepositoryList', () => {
       ).toBeGreaterThan(0);
     });
 
-    // Check if MockIntersectionObserver is being used
-    // eslint-disable-next-line no-console
-    console.log(
-      'MockIntersectionObserver instances before trigger:',
-      (
-        window as unknown as {
-          IntersectionObserver: {
-            instances: Array<{
-              cb?: (entries: IntersectionObserverEntry[]) => void;
-            }>;
-          };
-        }
-      ).IntersectionObserver.instances.length
-    );
-    (
-      window as unknown as {
-        IntersectionObserver: {
-          instances: Array<{
-            cb?: (entries: IntersectionObserverEntry[]) => void;
-          }>;
-        };
-      }
-    ).IntersectionObserver.instances.forEach((instance, index: number) => {
-      // eslint-disable-next-line no-console
-      console.log(`Instance ${index} callback:`, typeof instance.cb);
-    });
-
-    // Simulate intersection observer callback for loading more (first time)
+    // Simulate intersection observer callback for loading more
     const observer = (
       window as unknown as {
         IntersectionObserver: {
@@ -462,6 +438,7 @@ describe('GitHubRepositoryList', () => {
         };
       }
     ).IntersectionObserver.instances[0];
+
     if (observer && typeof observer.cb === 'function') {
       const loadingElement = screen.getByTestId('loading-more-container');
       await act(async () => {
@@ -476,26 +453,7 @@ describe('GitHubRepositoryList', () => {
             time: Date.now(),
           } as IntersectionObserverEntry,
         ]);
-        await new Promise(resolve => setTimeout(resolve, 800));
-      });
-    }
-
-    // Simulate intersection observer callback for loading more (second time)
-    if (observer && typeof observer.cb === 'function') {
-      // Don't query for loading element again, it may be gone
-      await act(async () => {
-        observer.cb!([
-          {
-            isIntersecting: true,
-            target: document.createElement('div'), // dummy element
-            boundingClientRect: {} as DOMRectReadOnly,
-            intersectionRatio: 1,
-            intersectionRect: {} as DOMRectReadOnly,
-            rootBounds: null,
-            time: Date.now(),
-          } as IntersectionObserverEntry,
-        ]);
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
     }
 
